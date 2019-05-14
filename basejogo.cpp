@@ -1,68 +1,81 @@
 #include "sfml.h"
 #include<iostream>
-
+#include<stdlib.h>
+#include<time.h>
+#include<cmath>
 
 using namespace std;
 
 int main() {
 
 
-    //variaveis
-        //tamanho da tela
-    int xtela = 640, ytela = 480;
-        //movimento
+    //VARIAVEIS ---------------------------------------------------------------
+        //TAMANHO DA TELA
+    int xtela = 680, ytela = 680;
+        //CONTADOR DE TEMPO
+    float tt = 0;
+    int tempo = 0;
+    clock_t timer;
+        //MOVIMENTO
             //jogador
     float xj = 220, yj = 50;
                 //(voar)
     bool asas = false;
-    float contFrames = 0, g = 4, f = 0, a = 0;
+    float click = 0, g = 500, a = 0, vo = 0, yjo = 0;
 
-    //cria a janela com tamanho 640x480 pixels
+
+
+
+    //CRIA A JANELA------------------------------------------------------------
     SFML sfml(xtela,ytela,"Meu jogo!");
-
-    //define a cor de fundo como preto
     sfml.background(0,0,0);
 
-    //início do laço principal do jogo
+    //LAÇO PRINCIPAL===========================================================
     while (sfml.windowIsOpen()) {
+        //inicio do contador de tempo
+        timer = clock();
 
         //apaga o conteúdo da janela
         sfml.clear();
 
-        //MOVIMENTO -----------------------------------------------------
+        //MOVIMENTO -----------------------------------------------------------
             //JOGADOR
-        if(yj<430-70){
-            a = g + f;
-        }else{
-            a = 0;
+        a = g;
+        if(yj < ytela - 50){
+            yj = yjo + (vo*tt) + (a*pow(tt,2));
         }
-        yj+=a;
                 //voar
        if(sfml.keyIsDown(SFML::Key::Up) && asas == false) {
             asas = true;
-            contFrames = 0;
-        }
-        if(asas = true) {
-            contFrames++;
-            f = -10;
-            if(contFrames > 50) {
-                asas = false;
-                f = 0;
+            tt = 0;
+            yjo = yj;
+            vo = -400;
+            if(yj > ytela - 50){
+            yj -= 5;
             }
-        }
 
-        //DESENHA ----------------------------------------------
-            //CHAO
-        sfml.fill(155, 200, 0);
-        sfml.rect(0, 430, 640, 100);
+        }
+        if(sfml.keyIsDown(SFML::Key::Up) == false && asas == true){
+            asas = false;
+        }
+        
+            //OBSTACULOS
+        
+
+        //DESENHA -------------------------------------------------------------
             //JOGADOR
         sfml.fill(155, 0, 0);
-        sfml.ellipse(xj, yj, 100, 100);
+        sfml.ellipse(xj, yj, 50, 50);
+            //OBSTACULOS
+        
 
 
         //mostra o conteúdo na janela
         sfml.display();
 
+        //fim do contador de tempo
+        timer = clock() - timer;
+        tt+=((float)timer)/CLOCKS_PER_SEC;
     }
 
     return 0;
