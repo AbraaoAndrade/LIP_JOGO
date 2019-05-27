@@ -15,29 +15,29 @@ int main() {
 
     //VARIAVEIS ---------------------------------------------------------------
         //TELA
-    int xtela = 480, ytela = 500;
+    int xtela = 480, ytela = 550;
         //TEMPO
     float tt = 0;
     int tempo = 0;
     clock_t timer;
         //JOGADOR
             //posição
-    float xj = 220, yj = 50, lj = 25, hj = 25, esx = 25, esy = 25;
+    float xj = 190, yj = 50, lj = 35, hj = 35;
                 //(voar)
     bool asas = false;
-    float click = 0, g = 500, a = 0, vjo = 0, yjo = 0;
+    float click = 0, g = 800, a = 0, vjo = 0, yjo = 0;
         //INIMIGO
     int qt = 5, u = 0;
     float xi[qt], yi1[qt], yi2[qt], lxi[qt], lyi1[qt], lyi2[qt];
-    float vi = 1, distmax = 300;
+    float vi = 1, distmax = 300 + 60, distminx = 50 + 60, distminy = 80;
             //criando as primeiras coordenadas dos inimigos
     for ( int i = 0; i < qt; i++) {
-        xi[i] = xtela + (i*200);
-        lyi1[i] = random(50,ytela-50);
+        xi[i] = xtela + (i*180);
+        lyi1[i] = random(50,ytela-140);
         lyi2[i] = ytela;
-        lxi[i] = 30;
+        lxi[i] = 80;
         yi1[i] = 0;
-        yi2[i] = yi1[i] + lyi1[i] + random(50,100);
+        yi2[i] = yi1[i] + lyi1[i] + 140;
     }
         //COLISAO
     int c = 0;
@@ -55,7 +55,7 @@ int main() {
     //INIMIGOS VETORES --------------------------------------------------------
         //CONSTROI OS PRIMEIROS INIMIGOS
         for ( int i = 0; i < qt; i++) {
-            sfml.fill(19, 32, 30);
+            sfml.fill(0, 90, 0);
             xi[i] = xi[i] - vi;
 
             sfml.rect(xi[i],yi1[i],lxi[i],lyi1[i]);
@@ -66,29 +66,29 @@ int main() {
         if(xi[u]<0-lxi[u]){
             //selecionando qual inimigo atravessou o limite do canvas
             if(u == 0){
-                xi[u] = random(lxi[u]+lj+esx,distmax) + xi[4];
+                xi[u] = random(distminx,distmax) + xi[4];
                 lyi1[u] = random(50,ytela-50);
-                yi2[u] = yi1[u] + lyi1[u] + random(lj+esy,100);
+                yi2[u] = yi1[u] + lyi1[u] + random(distminy,150);
             }
             if(u == 1){
-                xi[u] = random(lxi[u]+lj+esx,distmax) + xi[0];
+                xi[u] = random(distminx,distmax) + xi[0];
                 lyi1[u] = random(50,ytela-50);
-                yi2[u] = yi1[u] + lyi1[u] + random(lj+esy,100);
+                yi2[u] = yi1[u] + lyi1[u] + random(distminy,150);
             }
             if(u == 2){
-                xi[u] = random(lxi[u]+lj+esx,distmax) + xi[1];
+                xi[u] = random(distminx,distmax) + xi[1];
                 lyi1[u] = random(50,ytela-50);
-                yi2[u] = yi1[u] + lyi1[u] + random(lj+esy,100);
+                yi2[u] = yi1[u] + lyi1[u] + random(distminy,150);
             }
             if(u == 3){
-                xi[u] = random(lxi[u]+lj+esx,distmax) + xi[2];
+                xi[u] = random(distminx,distmax) + xi[2];
                 lyi1[u] = random(50,ytela-50);
-                yi2[u] = yi1[u] + lyi1[u] + random(lj+esy,100);
+                yi2[u] = yi1[u] + lyi1[u] + random(distminy,150);
             }
             if(u == 4){
-                xi[u] = random(lxi[u]+lj+esx,distmax) + xi[3];
+                xi[u] = random(distminx,distmax) + xi[3];
                 lyi1[u] = random(50,ytela-50);
-                yi2[u] = yi1[u] + lyi1[u] + random(lj+esy,100);
+                yi2[u] = yi1[u] + lyi1[u] + random(distminy,150);
             }
 
             u++;
@@ -108,7 +108,7 @@ int main() {
             asas = true;
             tt = 0;
             yjo = yj;
-            vjo = -400;
+            vjo = -480;
             if(yj > ytela - hj){
             yj -= 5;
             }
@@ -160,3 +160,4 @@ bool colisao(float xj,float yj,float lj,float hj, float xi1, float yi1, float li
     if(yj+hj>yi1 && yj<yi1+hi1 && xj+lj>xi1 && xj<xi1+li1 || yj+hj>yi2 && yj<yi2+hi2 && xj+lj>xi2 && xj<xi2+li2){return true;}
     else{return false;}
 }
+
