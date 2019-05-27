@@ -15,7 +15,7 @@ int main() {
 
     //VARIAVEIS ---------------------------------------------------------------
         //TELA
-    int xtela = 680, ytela = 480;
+    int xtela = 480, ytela = 500;
         //TEMPO
     float tt = 0;
     int tempo = 0;
