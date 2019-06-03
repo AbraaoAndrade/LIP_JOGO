@@ -3,6 +3,7 @@
 #include<stdlib.h>
 #include<time.h>
 #include<cmath>
+#include <cstring>
 
 using namespace std;
 
@@ -29,7 +30,7 @@ int main() {
         //INIMIGO
     int qt = 5, u = 0;
     float xi[qt], yi1[qt], yi2[qt], lxi[qt], lyi1[qt], lyi2[qt];
-    float vi = 1, distmax = 200 + 90, distminx = 190 + 90, distminy = 80;
+    float vi = 0.8, distmax = 250 + 90, distminx = 240 + 90, distminy = 130;
             //criando as primeiras coordenadas dos inimigos
     for ( int i = 0; i < qt; i++) {
         xi[i] = xtela + (i*290);
@@ -44,7 +45,16 @@ int main() {
         //TELA
     int tela = 1;
     bool telinha = false;
-    char nomejogo[] = "PIQUE PARDAL", start[] = "START", gameover[] = "GAME OVER";
+        //TEXTO
+    int n = 0, b = 0;
+    char pontuacao[] = "PONTOS", nivel[] = "NIVEL : 1", gameover[] = "GAME OVER";
+    char numero[200], pontos[200], nively[200];
+    char nomejogo[] = "PIQUE PARDAL", start[] = "START";
+        //NIVEL
+    int nivelx = 1, sobe = 0;
+        //BONUS
+    bool bonus = false;
+    int xb = xtela + 10, yb = 50, lb = 30, hb = 15, vb = 0;
 
     //CRIA A JANELA------------------------------------------------------------
     SFML sfml(xtela,ytela,"Meu jogo!");
@@ -72,6 +82,7 @@ int main() {
         }
     //TELA DE CARREGAMENTO+++++++++++++++++++++++++++++++++++++++++++++++++++++
         if(tela == 2){
+                cout << "oii " << endl;
                     //VARIAVEIS ---------------------------------------------------------------
                 //TEMPO
             tt = 0;
@@ -85,7 +96,7 @@ int main() {
                 //INIMIGO
             qt = 5, u = 0;
             xi[qt], yi1[qt], yi2[qt], lxi[qt], lyi1[qt], lyi2[qt];
-            vi = 1, distmax = 200 + 90, distminx = 190 + 90, distminy = 80;
+            vi = 0.8, distmax = 250 + 90, distminx = 240 + 90, distminy = 130;
                     //criando as primeiras coordenadas dos inimigos
             for ( int i = 0; i < qt; i++) {
                 xi[i] = xtela + (i*290);
@@ -97,6 +108,11 @@ int main() {
             }
                 //COLISAO
             c = 0;
+                //NIVEL
+            nivelx = 1;
+            sobe = 0;
+            bonus = false;
+            xb = xtela + 10, yb = 50, lb = 30, hb = 15, vb = 0;
 
             tela++;
 
@@ -176,9 +192,7 @@ int main() {
             //COLISÃO--------------------------------------------------------------
             if(colisao(xj, yj, lj, hj, xi[c], yi2[c], lxi[c], lyi2[c], xi[c], yi1[c], lxi[c], lyi1[c]) == true){
                 cout << "bateu" << " " << c << endl;
-                sfml.background(76,0,0);
-            }else{
-                sfml.background(0,0,0);
+                tela = 1;
             }
 
             if(xi-lxi<xj){
@@ -186,6 +200,51 @@ int main() {
                 if(c==qt){
                     c = 0;
                 }
+            }
+
+            //TEXTO----------------------------------------------------------------
+            if(xi[b]+lxi[b]<xj ){
+                n++;
+                b++;
+                sobe++;
+                if(b == qt){
+                    b = 0;
+                }
+            }
+            sprintf(numero,"%d",n);
+            sprintf(nively,"%d",nivelx);
+            sfml.fill(255,255,255);
+            sfml.text(pontuacao, (xtela/2)-10, 100);
+            sfml.text(nivel, xtela-90,15);
+            sfml.text(numero, xtela/2,115);
+
+            //NIVEL ---------------------------------------------------------------
+            if(sobe>=2){
+                sobe = 0;
+                nivelx++;
+                cout << nivelx << endl;
+            }
+            if(nivelx == 1){
+                vi = 0.8, distmax = 250 + 90, distminx = 240 + 90, distminy = 130, g = 800;
+
+            }
+            if(nivelx == 2){
+                vi = 1.5, distmax = 200 + 90, distminx = 190 + 90, distminy = 80, g = 850;
+
+            }
+
+            //POWERUP--------------------------------------------------------------
+            xb-=vb;
+            if(random(1,10) >= 1 && bonus == false){
+                bonus = true;
+            }
+            if(bonus == true && vb==0){
+                yb = random(0,ytela-hb-80);
+                vb = vi + 3;
+            }
+            if(xb+lb < 0){
+                xb = xtela + 10, yb = 50, lb = 30, hb = 15, vb = 0;
+                bonus = false;
             }
 
 
@@ -196,6 +255,9 @@ int main() {
                 //CHAO
             sfml.fill(50, 0, 0);
             sfml.rect(0, 560, xtela, 80);
+                //BONUS
+            sfml.fill(155, 0, 0);
+            sfml.rect(xb, yb, lb, hb);
 
 
 
@@ -228,4 +290,3 @@ bool colisao(float xj,float yj,float lj,float hj, float xi1, float yi1, float li
     if(yj+hj>yi1 && yj<yi1+hi1 && xj+lj>xi1 && xj<xi1+li1 || yj+hj>yi2 && yj<yi2+hi2 && xj+lj>xi2 && xj<xi2+li2){return true;}
     else{return false;}
 }
-
